@@ -28,13 +28,16 @@ import com.example.myapplication.databinding.FragmentHomeBinding;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class HomeFragment extends Fragment implements LocationSource,AMapLocationListener {
+public class HomeFragment extends Fragment implements LocationSource,AMapLocationListener,InputName_Dialog.OnInputConfirmedListener {
 
     private MapView mapView;
     private AMap aMap;
     private OnLocationChangedListener mListener;
     private AMapLocationClient locationClient;
     private AMapLocationClientOption clientOption;
+    private String project_name = "任务名称";
+    private Button btn_new;
+    private Button btn_name;
 
 
     public static HomeFragment newInstance() {
@@ -59,11 +62,20 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initview(savedInstanceState,view);
 
-        Button btn = view.findViewById(R.id.new_project);
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn_new = view.findViewById(R.id.new_project);
+        btn_name = view.findViewById(R.id.name_project);
+        btn_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btn.setVisibility(View.GONE);
+                btn_new.setVisibility(View.GONE);
+                showDialog(view);
+                btn_name.setVisibility(View.VISIBLE);
+            }
+        });
+        btn_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog(view);
             }
         });
         return view;
@@ -161,5 +173,17 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
      */
     private void showMsg(String msg){
         Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
+    }
+
+    public void showDialog(View view) {
+        InputName_Dialog inputname_dialog = new InputName_Dialog();
+        inputname_dialog.setOnInputConfirmedListener(this);
+        inputname_dialog.show(getChildFragmentManager(), "inputDialog");
+    }
+    @Override
+    public void onInputConfirmed(String inputText) {
+        // 在这里处理接收到的输入文字
+        project_name = inputText;
+        btn_name.setText(project_name);
     }
 }

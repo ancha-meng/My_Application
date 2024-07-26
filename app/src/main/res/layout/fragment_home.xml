@@ -15,6 +15,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></com.amap.api.maps2d.MapView>
     <Button
+        android:id="@+id/name_project"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="任务名称"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/map"
+        app:layout_constraintTop_toTopOf="@+id/map" />
+    <Button
         android:id="@+id/new_project"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
