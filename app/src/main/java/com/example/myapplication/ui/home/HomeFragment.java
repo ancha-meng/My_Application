@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,14 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         AMapLocationClient.updatePrivacyAgree(getActivity(),true);
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initview(savedInstanceState,view);
+
+        Button btn = view.findViewById(R.id.new_project);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btn.setVisibility(View.GONE);
+            }
+        });
         return view;
     }
 
