@@ -88,6 +88,11 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         {
             aMap=mapView.getMap();
         }
+        else
+        {
+            aMap.clear();
+            aMap=mapView.getMap();
+        }
         aMap.getUiSettings().setMyLocationButtonEnabled(true);
         aMap.setLocationSource(this);
         aMap.setMyLocationEnabled(true);
