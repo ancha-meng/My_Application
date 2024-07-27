@@ -15,20 +15,68 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></com.amap.api.maps2d.MapView>
     <Button
-        android:id="@+id/name_project"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:text="任务名称"
+        android:id="@+id/save_project"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="0dp"
+        android:text="保存"
+        android:background="#ffc576"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@+id/map"
-        app:layout_constraintTop_toTopOf="@+id/map" />
+        app:layout_constraintStart_toStartOf="@+id/name_project"
+        app:layout_constraintTop_toTopOf="@+id/name_project" />
+    <Button
+        android:id="@+id/finish_project"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="190dp"
+        android:layout_marginLeft="190dp"
+        android:layout_marginTop="0dp"
+        android:text="完成"
+        android:background="#6cff7c"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/name_project"
+        app:layout_constraintTop_toTopOf="@+id/name_project" />
+    <Button
+        android:id="@+id/cancel_project"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="270dp"
+        android:layout_marginLeft="270dp"
+        android:layout_marginTop="0dp"
+        android:text="取消"
+        android:background="#ff8973"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/name_project"
+        app:layout_constraintTop_toTopOf="@+id/name_project" />
+
+    <Button
+        android:id="@+id/name_project"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="任务名称"
+        android:background="#cccccc"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/new_project"
+        app:layout_constraintTop_toTopOf="@+id/new_project" />
+
     <Button
         android:id="@+id/new_project"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
         android:text="新建任务"
-        app:layout_constraintStart_toStartOf="@+id/map"
-        app:layout_constraintTop_toTopOf="@+id/map" />
+        android:background="#6b86ff"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01" />
 </androidx.constraintlayout.widget.ConstraintLayout>

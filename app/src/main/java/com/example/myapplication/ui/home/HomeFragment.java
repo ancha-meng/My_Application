@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.home;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +40,9 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
     private String project_name = "任务名称";
     private Button btn_new;
     private Button btn_name;
+    private Button btn_save;
+    private Button btn_finish;
+    private Button btn_cancel;
 
 
     public static HomeFragment newInstance() {
@@ -64,18 +69,42 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
 
         btn_new = view.findViewById(R.id.new_project);
         btn_name = view.findViewById(R.id.name_project);
+        btn_save = view.findViewById(R.id.save_project);
+        btn_finish = view.findViewById(R.id.finish_project);
+        btn_cancel = view.findViewById(R.id.cancel_project);
         btn_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 btn_new.setVisibility(View.GONE);
                 showDialog(view);
                 btn_name.setVisibility(View.VISIBLE);
+                btn_save.setVisibility(View.VISIBLE);
+                btn_finish.setVisibility(View.VISIBLE);
+                btn_cancel.setVisibility(View.VISIBLE);
             }
         });
         btn_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDialog(view);
+            }
+        });
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMsg("已保存");
+            }
+        });
+        btn_finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTipDialog("确认完成？");
+            }
+        });
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTipDialog("确认取消？");
             }
         });
         return view;
@@ -190,5 +219,28 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         // 在这里处理接收到的输入文字
         project_name = inputText;
         btn_name.setText(project_name);
+    }
+    private void showTipDialog(String text){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("提示");
+        builder.setMessage(text);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                btn_new.setVisibility(View.VISIBLE);
+                btn_name.setVisibility(View.GONE);
+                btn_save.setVisibility(View.GONE);
+                btn_finish.setVisibility(View.GONE);
+                btn_cancel.setVisibility(View.GONE);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
 }
