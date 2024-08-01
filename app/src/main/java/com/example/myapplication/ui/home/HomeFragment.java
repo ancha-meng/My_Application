@@ -1,19 +1,45 @@
 package com.example.myapplication.ui.home;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.hardware.Camera;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.provider.MediaStore;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,6 +52,11 @@ import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentHomeBinding;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -43,7 +74,18 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
     private Button btn_save;
     private Button btn_finish;
     private Button btn_cancel;
-
+    private Button btn_start;
+    private Button btn_camera;
+    private Button btn_audio;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
+    public static final int TAKE_PHOTO = 1;
+    private ImageView cameraPicture;
+    private boolean isRecording = false;
+    private MediaRecorder mMediaRecorder;
+    //计时器部分
+    private long startTime;
+    private TextView timerTextView;
+    private Handler handler = new Handler();
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -72,15 +114,15 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         btn_save = view.findViewById(R.id.save_project);
         btn_finish = view.findViewById(R.id.finish_project);
         btn_cancel = view.findViewById(R.id.cancel_project);
+        btn_start = view.findViewById(R.id.start_eval);
+        btn_camera = view.findViewById(R.id.btn_camera);
+        btn_audio = view.findViewById(R.id.btn_audio);
+        cameraPicture = view.findViewById(R.id.photo_view);
+        timerTextView = view.findViewById(R.id.timer);
         btn_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btn_new.setVisibility(View.GONE);
                 showDialog(view);
-                btn_name.setVisibility(View.VISIBLE);
-                btn_save.setVisibility(View.VISIBLE);
-                btn_finish.setVisibility(View.VISIBLE);
-                btn_cancel.setVisibility(View.VISIBLE);
             }
         });
         btn_name.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +147,66 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
             @Override
             public void onClick(View view) {
                 showTipDialog("确认取消？");
+            }
+        });
+        btn_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 获取当前视图的布局参数
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapView.getLayoutParams();
+                // 修改高度百分比
+                params.matchConstraintPercentHeight = 0.3f;
+                // 将修改后的布局参数应用到视图上
+                mapView.setLayoutParams(params);
+                btn_start.setVisibility(View.GONE);
+            }
+        });
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    // 处理拍照结果
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // 这里处理照片数据
+                        Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
+                        cameraPicture.setImageBitmap(imageBitmap);
+                        saveImage(imageBitmap);
+                    }
+                }
+        );
+        btn_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 动态申请权限
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, TAKE_PHOTO);
+                    // 启动相机程序
+                    openCamera();
+                } else {
+                    // 启动相机程序
+                    openCamera();
+                }
+            }
+        });
+        btn_audio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 检查录音权限是否已获取
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO)!= PackageManager.PERMISSION_GRANTED) {
+                    // 未获取，请求权限
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+                }
+                if(isRecording==false){
+                    startRecording();
+                    isRecording=true;
+                    btn_audio.setText("结束录音");
+                    start_timer();
+                }
+                else{
+                    stopRecording();
+                    isRecording=false;
+                    btn_audio.setText("开始录音");
+                    stop_timer();
+                }
             }
         });
         return view;
@@ -219,6 +321,12 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         // 在这里处理接收到的输入文字
         project_name = inputText;
         btn_name.setText(project_name);
+        btn_new.setVisibility(View.GONE);
+        btn_name.setVisibility(View.VISIBLE);
+        btn_save.setVisibility(View.VISIBLE);
+        btn_finish.setVisibility(View.VISIBLE);
+        btn_cancel.setVisibility(View.VISIBLE);
+        btn_start.setVisibility(View.VISIBLE);
     }
     private void showTipDialog(String text){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -232,7 +340,9 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
                 btn_save.setVisibility(View.GONE);
                 btn_finish.setVisibility(View.GONE);
                 btn_cancel.setVisibility(View.GONE);
+                btn_start.setVisibility(View.GONE);
                 dialogInterface.dismiss();
+                project_name="任务名称";
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -242,5 +352,112 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
             }
         });
         builder.show();
+    }
+    private void openCamera() {
+        if (activityResultLauncher != null) {
+            // launch的输入参数是泛型，对应ActivityResultLauncher<Intent>
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // 确保有相机应用可用
+            if (takePictureIntent.resolveActivity(requireActivity().getPackageManager())!= null) {
+                activityResultLauncher.launch(takePictureIntent);
+            }
+        }
+    }
+    private void saveImage(Bitmap bitmap) {
+        //在API29及之后是不需要申请的，默认是允许的
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "image.jpg");
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+            // 发送刷新相册的广播
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri uri = Uri.fromFile(file);
+            intent.setData(uri);
+            getActivity().sendBroadcast(intent);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showMsg("保存失败");
+        }
+    }
+
+    public void startRecording() {
+        //在API29及之后是不需要申请的，默认是允许的
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
+        showMsg("开始录音，再次点击结束录音");
+        // 开始录音
+        /* ①Initial：实例化MediaRecorder对象 */
+        if (mMediaRecorder == null)
+            mMediaRecorder = new MediaRecorder();
+        try {
+            /* ②setAudioSource/setVedioSource */
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);// 设置麦克风
+            /*
+             * ②设置输出文件的格式：THREE_GPP/MPEG-4/RAW_AMR/Default THREE_GPP(3gp格式
+             * ，H263视频/ARM音频编码)、MPEG-4、RAW_AMR(只支持音频且音频编码要求为AMR_NB)
+             */
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            /* ②设置音频文件的编码：AAC/AMR_NB/AMR_MB/Default 声音的（波形）的采样 */
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            /* ③准备 */
+            mMediaRecorder.setOutputFile(getOutputPath());
+            mMediaRecorder.prepare();
+            /* ④开始 */
+            mMediaRecorder.start();
+        } catch (IOException e) {
+            Log.e("RecordingError", "Error starting recording: " + e.getMessage());
+        }
+    }
+
+    public void stopRecording() {
+        try {
+            showMsg("结束录音");
+            mMediaRecorder.stop();
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+        } catch (RuntimeException e) {
+            Log.e("RecordingError", "Error stopping recording: " + e.getMessage());
+            mMediaRecorder.reset();
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+            File file = new File(getOutputPath());
+            if (file.exists())
+                file.delete();
+        }
+    }
+    private String getOutputPath(){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RECORDINGS), "recordinging.mp3");
+            return file.getAbsolutePath();
+        }
+        else{
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "recordinging.mp3");
+            return file.getAbsolutePath();
+        }
+    }
+    public void start_timer() {
+        startTime = SystemClock.elapsedRealtime();
+        updateTimer();
+    }
+
+    private void updateTimer() {
+        long elapsedTime = SystemClock.elapsedRealtime() - startTime;
+        int minutes = (int) (elapsedTime / 60000);
+        int seconds = (int) ((elapsedTime % 60000) / 1000);
+
+        String timeText = String.format("%02d:%02d", minutes, seconds);
+        timerTextView.setText(timeText);
+
+        handler.postDelayed(this::updateTimer, 1000);
+    }
+
+    public void stop_timer() {
+        handler.removeCallbacksAndMessages(null);
     }
 }

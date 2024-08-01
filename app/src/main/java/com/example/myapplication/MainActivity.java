@@ -67,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
         };
         if (EasyPermissions.hasPermissions(this, permissions)) {
             //true 有权限 开始定位
-            showMsg("已获得权限，可以定位啦！");
+            //showMsg("已获得权限，可以定位啦！");
         } else {
             //false 无权限
-            showMsg("无权限");
+            //showMsg("无权限");
             EasyPermissions.requestPermissions(this, "需要权限", REQUEST_PERMISSIONS, permissions);
         }
     }
