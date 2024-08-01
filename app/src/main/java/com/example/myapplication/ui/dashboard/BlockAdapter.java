@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.dashboard;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,14 @@ import java.util.List;
 public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHolder> {
 
     private List<BlockItem> blockList; // 修改变量名以匹配数据类型
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(String taskId);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
 
     // ViewHolder类
     public static class BlockViewHolder extends RecyclerView.ViewHolder {
@@ -47,6 +57,13 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         BlockItem blockItem = blockList.get(position);
         holder.Task_id.setText(blockItem.getTask_id());
         holder.Task_time.setText(blockItem.getTask_time().toString());
+        // 设置点击事件
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                Log.e("sss1","dianji1");
+                onItemClickListener.onItemClick(blockItem.getTask_id());
+            }
+        });
     }
 
     @Override

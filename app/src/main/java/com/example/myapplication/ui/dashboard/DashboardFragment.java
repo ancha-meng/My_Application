@@ -1,19 +1,23 @@
 package com.example.myapplication.ui.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentDashboardBinding;
 import java.util.ArrayList;
 
 //中间，包括数据处理，页面操作逻辑，生命周期
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements BlockAdapter.OnItemClickListener{
 
     // 定义成员变量
     private FragmentDashboardBinding binding; // 用于处理布局文件的数据绑定
@@ -33,6 +37,7 @@ public class DashboardFragment extends Fragment {
 
         recyclerView = binding.recyclerView;
         blockAdapter = new BlockAdapter();
+        blockAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(blockAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -44,6 +49,13 @@ public class DashboardFragment extends Fragment {
         });
 
         return root;
+    }
+    @Override
+    public void onItemClick(String taskId) {
+        // 启动新的Activity
+        Intent intent = new Intent(getContext(), SubMainActivity.class);
+        intent.putExtra("TASK_ID", taskId);
+        startActivity(intent);
     }
 
     @Override
