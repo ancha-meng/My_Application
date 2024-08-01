@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,6 +87,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
     private long startTime;
     private TextView timerTextView;
     private Handler handler = new Handler();
+    private RelativeLayout input_view;
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -119,6 +121,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         btn_audio = view.findViewById(R.id.btn_audio);
         cameraPicture = view.findViewById(R.id.photo_view);
         timerTextView = view.findViewById(R.id.timer);
+        input_view = view.findViewById(R.id.input_point);
         btn_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,6 +162,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
                 // 将修改后的布局参数应用到视图上
                 mapView.setLayoutParams(params);
                 btn_start.setVisibility(View.GONE);
+                input_view.setVisibility(View.VISIBLE);
             }
         });
         activityResultLauncher = registerForActivityResult(
