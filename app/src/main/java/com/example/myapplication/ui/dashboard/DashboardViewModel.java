@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
-//中间——数据层，包括数据库交互
+//model层，与数据库交互/模拟数据，处理控制器层的请求，返回结果
 public class DashboardViewModel extends ViewModel {
 
     private final MutableLiveData<List<BlockItem>> mBlockList;

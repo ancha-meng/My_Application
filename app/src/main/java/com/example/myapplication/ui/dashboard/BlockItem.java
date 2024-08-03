@@ -4,7 +4,7 @@ import android.widget.TextView;
 import java.util.Date;
 
 
-//每个块的数据结构
+//——————————————————————此类负责定义专有的数据块-1类：存储单个任务的相关信息，便于统一管理————————————————————
 public class BlockItem {
     private String Task_id;
     private Date Task_time;

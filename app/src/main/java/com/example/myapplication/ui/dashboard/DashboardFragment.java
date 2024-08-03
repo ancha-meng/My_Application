@@ -16,7 +16,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentDashboardBinding;
 import java.util.ArrayList;
 
-//中间，包括数据处理，页面操作逻辑，生命周期
+//视图层，交互来自模型的数据，负责页面的展示，以及管理页面操作逻辑，生命周期
 public class DashboardFragment extends Fragment implements BlockAdapter.OnItemClickListener{
 
     // 定义成员变量
@@ -41,7 +41,7 @@ public class DashboardFragment extends Fragment implements BlockAdapter.OnItemCl
         recyclerView.setAdapter(blockAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // 观察ViewModel中的数据，
+        // 观察ViewModel中的数据，获取model中读取的数据库数据，通过adapter同步数据
         dashboardViewModel.getBlockList().observe(getViewLifecycleOwner(), blockList -> {
             blockAdapter.setBlockList(blockList);
             // 通知适配器数据已经改变，让它刷新视图
@@ -50,6 +50,7 @@ public class DashboardFragment extends Fragment implements BlockAdapter.OnItemCl
 
         return root;
     }
+
     @Override
     public void onItemClick(String taskId) {
         // 启动新的Activity
