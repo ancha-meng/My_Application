@@ -22,7 +22,7 @@ public class DashboardViewModel extends ViewModel {
         for (int i = 0; i < 10; i++) {
             String taskId = "Task " + (i + 1);
             Date taskTime = new Date(); // 这里可以根据你的需求设置具体的时间
-            BlockItem blockItem = new BlockItem(taskId, taskTime);
+            BlockItem blockItem = new BlockItem(taskId, taskTime,3);
             blockList.add(blockItem);
         }
         mBlockList.setValue(blockList);
