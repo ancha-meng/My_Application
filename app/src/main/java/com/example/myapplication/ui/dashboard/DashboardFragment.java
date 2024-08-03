@@ -34,8 +34,9 @@ public class DashboardFragment extends Fragment implements BlockAdapter.OnItemCl
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         recyclerView = binding.recyclerView;
+
+
         blockAdapter = new BlockAdapter();
         blockAdapter.setOnItemClickListener(this);
         recyclerView.setAdapter(blockAdapter);

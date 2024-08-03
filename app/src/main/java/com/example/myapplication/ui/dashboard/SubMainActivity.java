@@ -32,7 +32,7 @@ public class SubMainActivity extends AppCompatActivity {
     private void showListFragment() {
         // 切换按钮状态
         buttonList.setBackgroundColor(getResources().getColor(R.color.teal_200));
-        buttonMap.setBackgroundColor(getResources().getColor(R.color.teal_700));
+        buttonMap.setBackgroundColor(getResources().getColor(R.color.light_gray));
 
         // 显示列表Fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -41,8 +41,7 @@ public class SubMainActivity extends AppCompatActivity {
     }
 
     private void showMapFragment() {
-        // 切换按钮状态
-        buttonList.setBackgroundColor(getResources().getColor(R.color.teal_700));
+        buttonList.setBackgroundColor(getResources().getColor(R.color.light_gray));
         buttonMap.setBackgroundColor(getResources().getColor(R.color.teal_200));
 
         // 显示地图Fragment

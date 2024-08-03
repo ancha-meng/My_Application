@@ -1,0 +1,5 @@
+<!-- res/drawable/circle_button.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/black" /> <!-- 按钮颜色，可以根据需要修改 -->
+    <corners android:radius="20dp" /> <!-- 圆角半径，可以根据需要调整 -->
+</shape>

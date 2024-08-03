@@ -58,7 +58,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         BlockItem blockItem = blockList.get(position);
         holder.Task_id.setText(blockItem.getTask_id());
         holder.Task_time.setText(blockItem.getTask_time().toString());
-        holder.Point_num.setText(blockItem.getPoint_num());
+        holder.Point_num.setText(Integer.toString(blockItem.getPoint_num()));
         // 设置激活点击回调
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {

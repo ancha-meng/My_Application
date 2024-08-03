@@ -7,35 +7,45 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
+import com.example.myapplication.databinding.FragmentDashboardBinding;
 
 import java.util.ArrayList;
 
 public class SubListFragment extends Fragment {
 
+    private FragmentDashboardBinding binding;
     private RecyclerView recyclerView;
-//    private SubListAdapter subListAdapter;
+    private PointsAdapter pointsAdapter;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.show_list_layout, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-//        // 绑定RecyclerView
-//        recyclerView = view.findViewById(R.id.recycler_view);
-//        subListAdapter = new SubListAdapter();
-//        recyclerView.setAdapter(subListAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//
-//        // 模拟数据
-//        List<SubListItem> subListItems = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            subListItems.add(new SubListItem("Sub Task " + (i + 1), new Date()));
-//        }
-//        subListAdapter.setSubListItems(subListItems);
-//
-        return view;
+        SubListViewModel subListViewModel=
+                new ViewModelProvider(this).get(SubListViewModel.class);
+        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        recyclerView = binding.recyclerView;
+
+        pointsAdapter=new PointsAdapter();
+        recyclerView.setAdapter(pointsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        subListViewModel.getPointList().observe(getViewLifecycleOwner(),pointItems -> {
+            pointsAdapter.setPointList(pointItems);
+            pointsAdapter.notifyDataSetChanged();
+        });
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
