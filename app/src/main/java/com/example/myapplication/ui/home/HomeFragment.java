@@ -49,6 +49,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
+import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
 import com.example.myapplication.R;
@@ -65,6 +66,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class HomeFragment extends Fragment implements LocationSource,AMapLocationListener,InputName_Dialog.OnInputConfirmedListener {
 
     private MapView mapView;
+    private  String lat;
+    private  String lon;
     private AMap aMap;
     private OnLocationChangedListener mListener;
     private AMapLocationClient locationClient;
@@ -76,6 +79,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
     private Button btn_finish;
     private Button btn_cancel;
     private Button btn_start;
+    private TextView inform_point;
     private Button btn_camera;
     private Button btn_audio;
     private ActivityResultLauncher<Intent> activityResultLauncher;
@@ -117,6 +121,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         btn_finish = view.findViewById(R.id.finish_project);
         btn_cancel = view.findViewById(R.id.cancel_project);
         btn_start = view.findViewById(R.id.start_eval);
+        inform_point = view.findViewById(R.id.inform_point);
         btn_camera = view.findViewById(R.id.btn_camera);
         btn_audio = view.findViewById(R.id.btn_audio);
         cameraPicture = view.findViewById(R.id.photo_view);
@@ -156,13 +161,20 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
             @Override
             public void onClick(View view) {
                 // 获取当前视图的布局参数
-                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapView.getLayoutParams();
+                //ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapView.getLayoutParams();
                 // 修改高度百分比
-                params.matchConstraintPercentHeight = 0.3f;
+                //params.matchConstraintPercentHeight = 0.3f;
                 // 将修改后的布局参数应用到视图上
-                mapView.setLayoutParams(params);
+                //mapView.setLayoutParams(params);
+                mapView.setVisibility(View.GONE);
                 btn_start.setVisibility(View.GONE);
+                btn_name.setVisibility(View.GONE);
+                btn_save.setVisibility(View.GONE);
+                btn_finish.setVisibility(View.GONE);
+                btn_cancel.setVisibility(View.GONE);
                 input_view.setVisibility(View.VISIBLE);
+                String text = "x:"+lon+" Y:"+lat+";温度:";
+                inform_point.setText(text);
             }
         });
         activityResultLauncher = registerForActivityResult(
@@ -231,6 +243,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         aMap.getUiSettings().setMyLocationButtonEnabled(true);
         aMap.setLocationSource(this);
         aMap.setMyLocationEnabled(true);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(18));
     }
     /**
      * 激活定位
@@ -272,6 +285,8 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
             if (aMapLocation != null
                     &&aMapLocation.getErrorCode() == 0) {
                 mListener.onLocationChanged(aMapLocation);// 显示系统小蓝点
+                lat = String.format("%.2f", aMapLocation.getLatitude());
+                lon = String.format("%.2f", aMapLocation.getLongitude());
             } else {
                 String errText = "定位失败," + aMapLocation.getErrorCode()+ ": " + aMapLocation.getErrorInfo();
                 Log.e("AmapErr",errText);
