@@ -1,12 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- 地图内容 -->
-    <TextView
-        android:id="@+id/map_fragment"
+    <!-- 地图视图 -->
+    <com.amap.api.maps2d.MapView
+        android:id="@+id/sub_map"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="地图内容" />
+        android:layout_height="500dp"
+        app:layout_constraintHeight_percent="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </LinearLayout>
