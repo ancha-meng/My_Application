@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.dashboard;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,31 +12,40 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 
 import java.util.List;
-//适配器——表示层，用于直接操作页面
+//控制器中间层，完成列表碎片与布局样式的绑定，以及数据的存储管理
 public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHolder> {
 
-    private List<BlockItem> blockList; // 修改变量名以匹配数据类型
+    private List<BlockItem> blockList;
+    private OnItemClickListener onItemClickListener;
 
-    // ViewHolder类
+    //回调，处理每个信息块的点击事件
+    public interface OnItemClickListener {
+        void onItemClick(String taskId);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
+
+
     public static class BlockViewHolder extends RecyclerView.ViewHolder {
-        // 通常是视图的值引用
         TextView Task_id;
         TextView Task_time;
+        TextView Point_num;
 
         public BlockViewHolder(View itemView) {
             super(itemView);
-            // 获取视图中的id，这两个引用将用于每个block的数据赋值
             Task_id = itemView.findViewById(R.id.task_id);
             Task_time = itemView.findViewById(R.id.task_time);
+            Point_num=itemView.findViewById(R.id.points_num);
         }
     }
 
-    //更新blocklist数据
+    //对外开放的数据修改，用于接收外界的数据
     public void setBlockList(List<BlockItem> blockList) {
         this.blockList = blockList;
     }
 
-    // 加载dblock_layout.xml布局文件，完成样式的绑定
+    //完成样式的绑定
     @Override
     public BlockViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dblock_layout, parent, false);
@@ -47,6 +58,14 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         BlockItem blockItem = blockList.get(position);
         holder.Task_id.setText(blockItem.getTask_id());
         holder.Task_time.setText(blockItem.getTask_time().toString());
+        holder.Point_num.setText(Integer.toString(blockItem.getPoint_num()));
+        // 设置激活点击回调
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                Log.e("sss1","dianji1");
+                onItemClickListener.onItemClick(blockItem.getTask_id());
+            }
+        });
     }
 
     @Override

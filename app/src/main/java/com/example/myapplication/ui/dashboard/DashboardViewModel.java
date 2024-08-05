@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
-//中间——数据层，包括数据库交互
+//model层，与数据库交互/模拟数据，处理控制器层的请求，返回结果
 public class DashboardViewModel extends ViewModel {
 
     private final MutableLiveData<List<BlockItem>> mBlockList;
@@ -22,7 +22,7 @@ public class DashboardViewModel extends ViewModel {
         for (int i = 0; i < 10; i++) {
             String taskId = "Task " + (i + 1);
             Date taskTime = new Date(); // 这里可以根据你的需求设置具体的时间
-            BlockItem blockItem = new BlockItem(taskId, taskTime);
+            BlockItem blockItem = new BlockItem(taskId, taskTime,3);
             blockList.add(blockItem);
         }
         mBlockList.setValue(blockList);

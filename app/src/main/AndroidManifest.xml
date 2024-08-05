@@ -25,7 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".ui.dashboard.SubMainActivity"
+            android:exported="true"
+            android:label="信息查看">
+        </activity>
         <!--定位service-->
         <service android:name="com.amap.api.location.APSService"/>
         <meta-data
