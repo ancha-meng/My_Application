@@ -16,6 +16,8 @@ public class SubMainActivity extends AppCompatActivity {
     private Button buttonMap;
     private Button buttonUpload;
     private TextView Point_title;
+    private Boolean stat;
+    private String taskId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +26,8 @@ public class SubMainActivity extends AppCompatActivity {
 
         // 接收参数
         Intent intent = getIntent();
-        String taskId = intent.getStringExtra("TASK_ID");
-        Boolean stat = intent.getBooleanExtra("STAT", false); // 默认值为 false
+        taskId = intent.getStringExtra("TASK_ID");
+        stat = intent.getBooleanExtra("STAT", false); // 没有传值时，默认值为 false
 
         // 初始化互斥按钮
         buttonList = findViewById(R.id.button_list);
@@ -43,6 +45,10 @@ public class SubMainActivity extends AppCompatActivity {
             if (!stat) {//未提交时可以进行按钮交互
                 // 执行上传操作
                 Toast.makeText(this, "上传成功", Toast.LENGTH_SHORT).show();
+                // 更改 stat 状态
+                stat = true;
+                // 刷新页面
+                refreshPage(taskId, stat);
             }
         });
 
@@ -75,8 +81,19 @@ public class SubMainActivity extends AppCompatActivity {
         buttonMap.setBackgroundColor(getResources().getColor(R.color.teal_200));
 
         // 显示地图Fragment
+        SubMapFragment subMapFragment = new SubMapFragment();
+        subMapFragment.setStat(stat); // 传递 stat 参数
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new SubMapFragment());
+        transaction.replace(R.id.fragment_container, subMapFragment);
         transaction.commit();
+    }
+
+    private void refreshPage(String taskId, boolean stat) {
+        // 刷新当前页面，并传递更新后的参数
+        Intent intent = new Intent(this, SubMainActivity.class);
+        intent.putExtra("TASK_ID", taskId);
+        intent.putExtra("STAT", stat);
+        finish();
+        startActivity(intent);
     }
 }

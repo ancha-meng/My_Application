@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,6 +24,8 @@ public class SubMapFragment extends Fragment {
 
     private MapView mapView;
     private AMap aMap;
+    private boolean stat = false; // 示例参数，实际使用时请根据需要设置
+    private Button btnContinueTask;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,10 +35,30 @@ public class SubMapFragment extends Fragment {
         mapView = view.findViewById(R.id.sub_map);
         mapView.onCreate(savedInstanceState); // 此方法必须重写
 
+        // 绑定按钮
+        btnContinueTask = view.findViewById(R.id.btn_continue_task);
+
         // 初始化地图
         initMap();
 
+        // 控制按钮显示
+        if (!stat) {
+            btnContinueTask.setVisibility(View.VISIBLE);
+        } else {
+            btnContinueTask.setVisibility(View.GONE);
+        }
+
+        // 设置按钮点击事件
+        btnContinueTask.setOnClickListener(v -> {
+            // 处理点击事件
+            Toast.makeText(getContext(), "继续任务", Toast.LENGTH_SHORT).show();
+        });
+
         return view;
+    }
+
+    public void setStat(boolean stat) {
+        this.stat = stat;
     }
 
     private void initMap() {

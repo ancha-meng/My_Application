@@ -1,16 +1,24 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <!-- 地图视图 -->
     <com.amap.api.maps2d.MapView
         android:id="@+id/sub_map"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        app:layout_constraintHeight_percent="1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_height="match_parent" />
 
-</LinearLayout>
+    <!-- 方形按钮 -->
+    <Button
+        android:id="@+id/btn_continue_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/orange"
+        android:text="继续任务"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
+</RelativeLayout>
