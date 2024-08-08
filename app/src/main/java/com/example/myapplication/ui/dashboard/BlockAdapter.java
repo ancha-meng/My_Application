@@ -20,7 +20,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
 
     //回调，处理每个信息块的点击事件
     public interface OnItemClickListener {
-        void onItemClick(String taskId);
+        void onItemClick(String taskId,Boolean state);
     }
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
@@ -63,7 +63,9 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 Log.e("sss1","dianji1");
-                onItemClickListener.onItemClick(blockItem.getTask_id());
+                //模拟提交状态
+                Boolean stat=false;
+                onItemClickListener.onItemClick(blockItem.getTask_id(),stat);
             }
         });
     }

@@ -53,10 +53,13 @@ public class DashboardFragment extends Fragment implements BlockAdapter.OnItemCl
     }
 
     @Override
-    public void onItemClick(String taskId) {
+    public void onItemClick(String taskId, Boolean stat) {
         // 启动新的Activity
         Intent intent = new Intent(getContext(), SubMainActivity.class);
+        //传递点索引与状态信息
         intent.putExtra("TASK_ID", taskId);
+        intent.putExtra("STAT", stat);
+
         startActivity(intent);
     }
 
