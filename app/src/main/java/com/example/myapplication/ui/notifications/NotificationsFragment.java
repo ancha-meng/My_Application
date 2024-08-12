@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -27,6 +28,7 @@ public class NotificationsFragment extends Fragment {
         notificationsViewModel = new ViewModelProvider(this, new NotificationsViewModelFactory(requireContext())).get(NotificationsViewModel.class);
 
         final ImageView avatar = root.findViewById(R.id.avatar);
+        final TextView username = root.findViewById(R.id.username); // 新增用户名TextView
         final LinearLayout functionalityButtons = root.findViewById(R.id.functionality_buttons);
 
         notificationsViewModel.getIsLoggedIn().observe(getViewLifecycleOwner(), isLoggedIn -> {
@@ -40,9 +42,13 @@ public class NotificationsFragment extends Fragment {
                         avatar.setImageResource(R.drawable.ic_avatar_placeholder); // 设置占位符头像
                     }
                 });
+                notificationsViewModel.getUserName().observe(getViewLifecycleOwner(), userName -> {
+                    username.setText(userName); // 设置用户名
+                });
                 functionalityButtons.setVisibility(View.VISIBLE);
             } else {
                 avatar.setImageResource(R.drawable.ic_avatar_placeholder); // 设置占位符头像
+                username.setText("点击登录"); // 设置默认用户名
                 functionalityButtons.setVisibility(View.GONE);
             }
         });
@@ -50,4 +56,3 @@ public class NotificationsFragment extends Fragment {
         return root;
     }
 }
-
