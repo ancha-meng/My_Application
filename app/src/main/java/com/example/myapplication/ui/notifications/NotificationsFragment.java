@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.notifications;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.R;
+import com.example.myapplication.ui.login_register.RegisterActivity;
 
 public class NotificationsFragment extends Fragment {
 
@@ -32,7 +34,7 @@ public class NotificationsFragment extends Fragment {
         final LinearLayout functionalityButtons = root.findViewById(R.id.functionality_buttons);
 
         notificationsViewModel.getIsLoggedIn().observe(getViewLifecycleOwner(), isLoggedIn -> {
-            isLoggedIn=true;//这里暂时以登录的状态进行显示
+            isLoggedIn = true; // 这里暂时以登录的状态进行显示
             if (isLoggedIn) {
                 notificationsViewModel.getUserAvatarPath().observe(getViewLifecycleOwner(), avatarPath -> {
                     if (avatarPath != null) {
@@ -51,6 +53,12 @@ public class NotificationsFragment extends Fragment {
                 username.setText("点击登录"); // 设置默认用户名
                 functionalityButtons.setVisibility(View.GONE);
             }
+        });
+
+        // 为“点击登录”文本设置点击事件
+        username.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), RegisterActivity.class);
+            startActivity(intent);
         });
 
         return root;
