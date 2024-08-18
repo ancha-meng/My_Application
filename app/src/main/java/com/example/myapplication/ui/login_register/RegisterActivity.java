@@ -69,4 +69,8 @@ public class RegisterActivity extends AppCompatActivity {
             avatarImageView.setImageURI(selectedImage);
         }
     }
+    public void goToLogin(View view) {
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
 }

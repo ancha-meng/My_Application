@@ -42,7 +42,12 @@
             android:label="用户注册"
             android:theme="@style/SplashTheme">
         </activity>
-
+        <activity
+            android:name=".ui.login_register.LoginActivity"
+            android:exported="true"
+            android:label="用户登录"
+            android:theme="@style/SplashTheme">
+        </activity>
         <!--定位service-->
         <service android:name="com.amap.api.location.APSService"/>
         <meta-data
