@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -25,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
     //请求权限码
     private static final int REQUEST_PERMISSIONS = 100;//9527;
 
+    //缓存值。用于表明登录状态
+    private static final String PREFS_NAME = "UserPrefs";
+    private static final String USER_ID_KEY = "UserID";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +48,20 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         checkingAndroidVersion();
+
+        //导航项选择监听器
+        navView.setOnNavigationItemSelectedListener(item -> {
+            SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            String userId = prefs.getString(USER_ID_KEY, null);
+
+            if (userId == null && item.getItemId() != R.id.navigation_notifications) {
+                // 如果UserID为空且目标不是NotificationsFragment，则弹窗提示
+                Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                return NavigationUI.onNavDestinationSelected(item, navController);
+            }
+        });
     }
     /**
      * 检查Android版本

@@ -13,22 +13,40 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication"
+        android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.login_register.SplashActivity"
+            android:exported="true"
+            android:label="开屏页面"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.dashboard.SubMainActivity"
             android:exported="true"
             android:label="信息查看">
+        </activity>
+        <activity
+            android:name=".ui.login_register.RegisterActivity"
+            android:exported="true"
+            android:label="用户注册"
+            android:theme="@style/SplashTheme">
+        </activity>
+        <activity
+            android:name=".ui.login_register.LoginActivity"
+            android:exported="true"
+            android:label="用户登录"
+            android:theme="@style/SplashTheme">
         </activity>
         <!--定位service-->
         <service android:name="com.amap.api.location.APSService"/>
