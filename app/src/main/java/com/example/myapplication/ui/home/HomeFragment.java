@@ -92,6 +92,12 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
     private TextView timerTextView;
     private Handler handler = new Handler();
     private RelativeLayout input_view;
+    //切换地图
+    private Button btn_vcmap;
+    private Button btn_rsmap;
+    //完成取消评价点
+    private Button btn_finish_point;
+    private Button btn_cancel_point;
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -115,6 +121,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initview(savedInstanceState,view);
 
+        //变量初始化
         btn_new = view.findViewById(R.id.new_project);
         btn_name = view.findViewById(R.id.name_project);
         btn_save = view.findViewById(R.id.save_project);
@@ -127,6 +134,14 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
         cameraPicture = view.findViewById(R.id.photo_view);
         timerTextView = view.findViewById(R.id.timer);
         input_view = view.findViewById(R.id.input_point);
+        //切换地图
+        btn_vcmap = view.findViewById(R.id.vc_map);
+        btn_rsmap = view.findViewById(R.id.rs_map);
+        //完成取消评价点
+        btn_finish_point = view.findViewById(R.id.finish_point);
+        btn_cancel_point = view.findViewById(R.id.cancel_point);
+
+        //按钮点击事件
         btn_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,6 +172,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
                 showTipDialog("确认取消？");
             }
         });
+        //开始评价
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,11 +188,14 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
                 btn_save.setVisibility(View.GONE);
                 btn_finish.setVisibility(View.GONE);
                 btn_cancel.setVisibility(View.GONE);
+                btn_vcmap.setVisibility(View.GONE);
+                btn_rsmap.setVisibility(View.GONE);
                 input_view.setVisibility(View.VISIBLE);
                 String text = "x:"+lon+" Y:"+lat+";温度:";
                 inform_point.setText(text);
             }
         });
+        //拍照结果
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -189,6 +208,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
                     }
                 }
         );
+        //相机
         btn_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,6 +223,7 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
                 }
             }
         });
+        //录音
         btn_audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -223,6 +244,35 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
                     btn_audio.setText("开始录音");
                     stop_timer();
                 }
+            }
+        });
+        //切换地图
+        //切换标准地图
+        btn_vcmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                aMap.setMapType(AMap.MAP_TYPE_NORMAL);// 设置卫星地图模式
+            }
+        });
+        //切换卫星地图
+        btn_rsmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                aMap.setMapType(AMap.MAP_TYPE_SATELLITE);// 设置卫星地图模式
+            }
+        });
+        //评价点完成
+        btn_finish_point.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTipDialog_point("确认完成？");
+            }
+        });
+        //评价点取消
+        btn_cancel_point.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTipDialog_point("确认取消？");
             }
         });
         return view;
@@ -362,6 +412,33 @@ public class HomeFragment extends Fragment implements LocationSource,AMapLocatio
                 btn_start.setVisibility(View.GONE);
                 dialogInterface.dismiss();
                 project_name="任务名称";
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
+    private void showTipDialog_point(String text){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("提示");
+        builder.setMessage(text);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                input_view.setVisibility(View.GONE);
+                mapView.setVisibility(View.VISIBLE);
+                btn_start.setVisibility(View.VISIBLE);
+                btn_name.setVisibility(View.VISIBLE);
+                btn_save.setVisibility(View.VISIBLE);
+                btn_finish.setVisibility(View.VISIBLE);
+                btn_cancel.setVisibility(View.VISIBLE);
+                btn_vcmap.setVisibility(View.VISIBLE);
+                btn_rsmap.setVisibility(View.VISIBLE);
+                dialogInterface.dismiss();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
