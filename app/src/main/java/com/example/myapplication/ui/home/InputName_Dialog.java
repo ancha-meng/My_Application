@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -36,7 +38,10 @@ public class InputName_Dialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // 在这里处理输入的内容
                         String input = editText.getText().toString();
-                        onConfirm(input);
+                        if(TextUtils.isEmpty(input)){
+                            showMsg("任务名称不能为空！");
+                        }
+                        else{onConfirm(input);}
                     }
                 })
                 .setNegativeButton("取消", null);
@@ -56,6 +61,9 @@ public class InputName_Dialog extends DialogFragment {
         if (listener!= null) {
             listener.onInputConfirmed(inputText);
         }
+    }
+    private void showMsg(String msg){
+        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
     }
 
 }

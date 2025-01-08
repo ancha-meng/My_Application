@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:text="上传"
             android:layout_marginRight="10sp"
-            android:background="@color/orange"/>
+            android:background="@color/orange"
+            android:onClick="onClick"/>
 
         <TextView
             android:id="@+id/point_title"

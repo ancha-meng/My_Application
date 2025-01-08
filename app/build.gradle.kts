@@ -14,6 +14,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled=true
     }
 
     buildTypes {
@@ -47,6 +48,7 @@ dependencies {
     implementation(files("libs\\AMap_Location_V6.4.5_20240508.jar"))
     implementation(libs.map2d)
     implementation(libs.easypermissions)
+    implementation(files("libs\\mysql-connector-java-5.1.30.jar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

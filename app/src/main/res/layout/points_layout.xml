@@ -35,7 +35,7 @@
                 android:id="@+id/point_id_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ID："
+                android:text="点名："
                 android:textSize="20sp" />
 
             <TextView
@@ -44,25 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:background="?android:attr/selectableItemBackground" />
-
-            <TextView
-                android:id="@+id/point_score_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="评分："
-                android:textSize="20sp"
-                android:layout_marginLeft="10dp" />
-
-            <EditText
-                android:id="@+id/point_score"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="20sp"
-                android:inputType="number"
-                android:background="?android:attr/selectableItemBackground" />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -75,7 +57,7 @@
                 android:id="@+id/point_location_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="地址："
+                android:text="坐标："
                 android:textSize="15sp" />
 
             <TextView
@@ -88,8 +70,6 @@
                 android:background="?android:attr/selectableItemBackground" />
         </LinearLayout>
     </LinearLayout>
-
-
 
     <ImageView
         android:id="@+id/point_image"

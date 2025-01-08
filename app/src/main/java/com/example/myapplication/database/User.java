@@ -1,17 +1,11 @@
 package com.example.myapplication.database;
 
 public class User {
-    private  int id;
-    private  String name;
-    private  String password;
-    public User(String name,String password){
-        super();
+    private String name;            //用户名
+    private String password;        //密码
+    public User(String name, String password) {
         this.name = name;
         this.password = password;
-    }
-    public  int getId() {return  id;}
-    public void setId(int id) {
-        this.id = id;
     }
     public String getName() {
         return name;
@@ -27,6 +21,12 @@ public class User {
     }
     @Override
     public String toString() {
-        return "User{id ="+ id + ", name = "+ name +",password ="+password +"}";
+        return "User{" +
+                "name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
+
+
+
